@@ -1,0 +1,21 @@
+set $wallpaper /home/heneos/HeNeos/Images/nadeko2_ai_vectorized.png
+
+set $background #0F0915
+set $foreground #c7b0c0
+
+set $color0 #0F0915
+set $color1 #B36431
+set $color2 #D1AE4D
+set $color3 #D8B44A
+set $color4 #1A1683
+set $color5 #211A80
+set $color6 #615191
+set $color7 #c7b0c0
+set $color8 #8b7b86
+set $color9 #B36431
+set $color10 #D1AE4D
+set $color11 #D8B44A
+set $color12 #1A1683
+set $color13 #211A80
+set $color14 #615191
+set $color15 #c7b0c0

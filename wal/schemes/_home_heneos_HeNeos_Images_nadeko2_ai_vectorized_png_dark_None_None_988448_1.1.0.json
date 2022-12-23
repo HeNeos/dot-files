@@ -1,0 +1,27 @@
+{
+    "wallpaper": "/home/heneos/HeNeos/Images/nadeko2_ai_vectorized.png",
+    "alpha": "100",
+    "special": {
+        "background": "#0F0915",
+        "foreground": "#c7b0c0",
+        "cursor": "#c7b0c0"
+    },
+    "colors": {
+        "color0": "#0F0915",
+        "color1": "#B36431",
+        "color2": "#D1AE4D",
+        "color3": "#D8B44A",
+        "color4": "#1A1683",
+        "color5": "#211A80",
+        "color6": "#615191",
+        "color7": "#c7b0c0",
+        "color8": "#8b7b86",
+        "color9": "#B36431",
+        "color10": "#D1AE4D",
+        "color11": "#D8B44A",
+        "color12": "#1A1683",
+        "color13": "#211A80",
+        "color14": "#615191",
+        "color15": "#c7b0c0"
+    }
+}

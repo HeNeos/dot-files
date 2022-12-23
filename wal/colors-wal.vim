@@ -1,0 +1,23 @@
+" Special
+let wallpaper  = "/home/heneos/HeNeos/Images/nadeko2_ai_vectorized.png"
+let background = "#0F0915"
+let foreground = "#c7b0c0"
+let cursor     = "#c7b0c0"
+
+" Colors
+let color0  = "#0F0915"
+let color1  = "#B36431"
+let color2  = "#D1AE4D"
+let color3  = "#D8B44A"
+let color4  = "#1A1683"
+let color5  = "#211A80"
+let color6  = "#615191"
+let color7  = "#c7b0c0"
+let color8  = "#8b7b86"
+let color9  = "#B36431"
+let color10 = "#D1AE4D"
+let color11 = "#D8B44A"
+let color12 = "#1A1683"
+let color13 = "#211A80"
+let color14 = "#615191"
+let color15 = "#c7b0c0"

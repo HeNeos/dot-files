@@ -1,15 +1,9 @@
 #!/bin/bash
 
-text=$(headsetcontrol -b)
-sz=${#text}
-pos=$sz
-for (( i=$sz-1; i>=0; i--))
-do
-    if [[ "${text:$i:1}" == " " ]] 
-    then
-        pos=$i
-        break
-    fi
-done
+text="$(headsetcontrol -b -c)%"
+if [[ $text == "-1%" ]]
+then
+    text="Charging"
+fi
 
-echo ${text:$pos:($sz-$pos-9)}
+echo $text

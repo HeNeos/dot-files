@@ -78,11 +78,13 @@ function git_status() {
 
 # AWS Profile
 function aws_profile() {
-    if command -v aws &> /dev/null && aws configure list --profile | grep -q '^profile'; then
-        local aws_profile=$(aws configure list --profile | grep '^profile' | awk '{print $2}')
-        local color="%{$fg_no_bold[orange]%}"
-        local color_reset="%{$reset_color%}"
-        echo " ${color}(: ${aws_profile})${color_reset} "
+    if command -v aws &> /dev/null && agp &> /dev/null; then
+        local aws_profile=$(agp)
+        if [ -n "$aws_profile" ]; then
+            local color="%{$fg_bold[orange]%}"
+            local color_rest="%{$reset_color%}"
+            echo "${color} ${aws_profile}${color_reset} "
+        fi
     fi
 }
 

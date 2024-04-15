@@ -24,7 +24,9 @@ def get_location():
     with open(file_path, "w") as f:
         json.dump(json_data, f, indent=2)
 
-    return {key: json_data[key] for key in data_keys}
+    output = {key: json_data[key] for key in data_keys}
+    print(json.dumps(output, indent=2))
+    return output
 
 if __name__ == "__main__":
     get_location()

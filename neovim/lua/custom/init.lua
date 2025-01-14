@@ -53,3 +53,43 @@ g.mapleader = " "
 
 opt.list = true
 opt.listchars = {space = "·", tab = "▷▷⋮"}
+
+
+
+vim.api.nvim_create_augroup("AutoFormat", {})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.py",
+  callback = function ()
+    vim.lsp.buf.format({async = false})
+  end,
+})
+
+vim.api.nvim_create_autocmd(
+    "BufWritePost",
+    {
+        pattern = "*.cpp",
+        group = "AutoFormat",
+        callback = function()
+            vim.cmd("silent !clang-format -i %")
+            vim.cmd("edit")
+        end,
+    }
+)
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function ()
+    vim.lsp.buf.format({async = false})
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.rs",
+  group = "AutoFormat",
+  callback = function ()
+    vim.cmd("silent write")
+    vim.cmd("silent !rustfmt --quiet %")
+    vim.cmd("edit")
+  end,
+})

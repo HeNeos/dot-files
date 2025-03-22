@@ -113,5 +113,12 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+#
+function ccat() {
+  cat "$1" | clip.exe
+}
+
+alias cat="batcat"
+alias ls="lsd"
 
 # (. /opt/openfoam10/etc/bashrc 2>> of.log &)

@@ -17,8 +17,6 @@ sudo add-apt-repository ppa:neovim-ppa/unstable -y
 sudo apt update
 sudo apt install neovim -y
 
-# Install NvChad
-# Clone repository
 rm -rf ~/.config/nvim
 rm -rf ~/.local/share/nvim
-git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
+cp -r nvim ~/.config/nvim 

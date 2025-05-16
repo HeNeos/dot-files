@@ -21,6 +21,7 @@ vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.softtabstop = 4
 vim.opt.mouse = 'a'
+vim.opt.fillchars = { eob = " " }
 vim.opt.whichwrap:append "<>[]hl"
 
 local map = vim.api.nvim_set_keymap
@@ -94,6 +95,12 @@ map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
 map('n', '<C-n>', '<Cmd>Neotree toggle reveal<CR>', opts)
 map('n', '<C-m>', '<Cmd>AerialToggle<CR>', opts)
 
+vim.g.markdown_fenced_languages = {
+  "ts=typescript"
+}
+
+vim.g.lazyvim_rust_diagnostics = "bacon-ls"
+
 vim.api.nvim_create_augroup("AutoFormat", {})
 
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -124,21 +131,21 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   pattern = "*.go",
   callback = function ()
-    rquire("lint").try_lint("golangcilint")
+    require("lint").try_lint("golangcilint")
   end,
 })
 
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   pattern = "*.rs",
   callback = function ()
-    rquire("lint").try_lint("clippy")
+    require("lint").try_lint("clippy")
   end,
 })
 
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   pattern = "*.ts",
   callback = function ()
-    rquire("lint").try_lint("deno")
+    require("lint").try_lint("deno")
   end,
 })
 
@@ -168,6 +175,22 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-vim.diagnostic.config({virtual_text = true})
+-- vim.diagnostic.config({virtual_text = true})
+
+vim.diagnostic.config({
+    virtual_text = false,
+    signs = true,
+    update_in_insert = true,
+    underline = true,
+    severity_sort = false,
+    float = {
+        border = 'rounded',
+        source = 'always',
+        header = '',
+        prefix = '',
+    },
+})
+
+
 
 require("config.lazy")

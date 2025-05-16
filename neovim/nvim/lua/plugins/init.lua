@@ -1,10 +1,103 @@
-return {
+local plugins = {
   {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000
   },
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        -- lua stuff
+        "lua-language-server",
+        "stylua",
+
+        -- web dev stuff
+        "css-lsp",
+        "html-lsp",
+        "typescript-language-server",
+        "deno",
+        "prettier",
+
+        -- c/cpp stuff
+        "clangd",
+        "clang-format",
+      }
+    }
+  },
+  {
+    'mrcjkb/rustaceanvim',
+    version = '^6', -- Recommended
+    lazy = false, -- This plugin is already lazy
+  },
+  'f-person/git-blame.nvim',
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "vim",
+        "lua",
+        "html",
+        "css",
+        "javascript",
+        "typescript",
+        "tsx",
+        "c",
+        "markdown",
+        "markdown_inline",
+        "python",
+        "bash",
+        "json",
+        "yaml",
+        "toml",
+        "rust",
+        "go",
+        "cpp",
+        "terraform",
+        "dockerfile"
+      },
+      indent = {
+        enable = true,
+      },
+    },
+  },
+  {
+    "nvim-tree/nvim-tree.lua",
+    opts = {
+      git = {
+        enable = true,
+      },
+
+      renderer = {
+        highlight_git = true,
+        icons = {
+          show = {
+            git = true,
+          },
+        },
+      },
+    }
+  },
+  {
+  "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+    keys = {
+      {
+        "<leader>",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
+  },
   "nvim-lua/plenary.nvim",
+  "onsails/lspkind.nvim",
   { "nvim-tree/nvim-web-devicons", lazy = true },
   
   {
@@ -53,15 +146,17 @@ return {
     opts = {},
   },
   { "folke/neoconf.nvim", cmd = "Neoconf" },
-  
   "nvim-telescope/telescope.nvim",
-  
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
       'neovim/nvim-lspconfig',
       'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-nvim-lua',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-vsnip',
+      'hrsh7th/vim-vsnip',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-cmdline'
     },
@@ -74,7 +169,20 @@ return {
       "nvim-treesitter/nvim-treesitter",
        "nvim-tree/nvim-web-devicons"
     },
-  },  
+  },
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    cmd = "LazyDev",
+    opts = {
+      library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        { path = "LazyVim", words = { "LazyVim" } },
+        { path = "snacks.nvim", words = { "Snacks" } },
+        { path = "lazy.nvim", words = { "LazyVim" } },
+      },
+    },
+  },
   {
     'nvimdev/dashboard-nvim',
     event = 'VimEnter',
@@ -160,3 +268,5 @@ return {
     end, -- Override to setup mason-lspconfig
   },
 }
+
+return plugins

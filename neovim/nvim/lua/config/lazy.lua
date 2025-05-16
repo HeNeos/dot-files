@@ -586,8 +586,193 @@ require("aerial").setup({
   },
 })
 
+require("telescope").setup({
+  defaults = {
+    mappings = {
+      i = {
+        ["<CR>"] = require('telescope.actions').select_default,  -- Open in current window
+        ["<C-x>"] = require('telescope.actions').select_horizontal, -- Open in horizontal split
+        ["<C-v>"] = require('telescope.actions').select_vertical,   -- Open in vertical split
+        ["<C-t>"] = require('telescope.actions').select_tab,        -- Open in new tab
+      },
+    }
+  },
+  pickers = {
+    lsp_references = {
+      theme = "ivy",
+      async = true,
+    }
+  }
+})
+
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<Space>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<Space>fg', builtin.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<Space>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<Space>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+
+local wk = require("which-key")
+vim.api.nvim_create_autocmd({"LspAttach"}, {
+  callback = function()
+    wk.add({
+      {"g", group="Goto"},
+      {"gd", vim.lsp.buf.definition, desc="Go to definition"},
+      {"gD", vim.lsp.buf.declaration, desc="Go to declaration"},
+      {"gi", vim.lsp.buf.implementation, desc="Go to implementation"},
+      {"gr", builtin.lsp_references, desc="Open a telescope window with references"},
+    })
+  end
+})
+
+local cmp = require("cmp")
+local defaults = require("cmp.config.default")
+local auto_select = true
+
+vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#282C34', fg = 'NONE' })  -- Selected item
+vim.api.nvim_set_hl(0, 'Pmenu', { fg = '#C5CDD9', bg = '#22252A' })  -- Normal items
+
+-- Optional: Add border to the completion window
+vim.api.nvim_set_hl(0, 'CmpBorder', { fg = '#3E4452', bg = '#22252A' })
+
+vim.diagnostic.config({
+  virtual_text = false,
+  update_in_insert = true,
+  underline = true,
+  severity_sort = true,
+  float = {
+    border = "rounded",
+    source = "always",
+  },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '✘',
+      [vim.diagnostic.severity.WARN] = '▲',
+      [vim.diagnostic.severity.HINT] = '⚑',
+      [vim.diagnostic.severity.INFO] = '»',
+    },
+  },
+})
+
+vim.api.nvim_set_hl(0, 'DiagnosticSignError', { fg = '#ff0000' })
+vim.api.nvim_set_hl(0, 'DiagnosticSignWarn', { fg = '#ffff00' })
+vim.api.nvim_set_hl(0, 'DiagnosticSignHint', { fg = '#00ff00' })
+vim.api.nvim_set_hl(0, 'DiagnosticSignInfo', { fg = '#00ffff' })
+
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float)
+
+-- vim.api.nvim_create_autocmd('CursorHold', {
+--   callback = function()
+--     vim.diagnostic.open_float(nil, {
+--       focusable = false,
+--       close_events = {
+--         "CursorMoved",
+--         "CursorMovedI",
+--         "BufHidden",
+--         "InsertCharPre"
+--       },
+--       border = 'rounded',
+--       source = 'always',
+--     })
+--   end
+-- })
+
+
+
+-- vim.api.nvim_set_hl(0, 'FloatBorder', { fg = '#3E4452', bg = '#22252A' })
+-- vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#22252A' })
+
+cmp.setup({
+  window = {
+    completion = cmp.config.window.bordered({
+      winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+      col_offset = -3,
+      side_padding = 0,
+      scrollbar = false,
+      border = "rounded",
+    }),
+    documentation = cmp.config.window.bordered({
+      winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,CursorLine:PmenuSel,Search:None",
+      border = "rounded",
+    }),
+  },
+  completion = {
+    completeopt = 'menu,menuone,noinsert',
+    keyword_length = 1,
+  },
+  preselect = auto_select and cmp.PreselectMode.Item or cmp.PreselectMode.None,
+  formatting = {
+    fields = { "kind", "abbr", "menu" },
+    format = function(entry, item)
+
+      local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, item)
+      local strings = vim.split(kind.kind, "%s", { trimempty = true })
+      kind.kind = " " .. (strings[1] or "") .. " "
+      kind.menu = "    (" .. (strings[2] or "") .. ")"
+
+      local widths = {
+        abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
+        menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
+      }
+      for key, width in pairs(widths) do
+        if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
+          item[key] = vim.fn.strcharpart(item[key], 0, width-1) .. "..."
+        end
+      end
+      return item
+    end,
+  },
+  experimental = {
+    ghost_text = vim.g.ai_cmp and {
+      hl_group = "CmpGhostText",
+    } or false,
+  },
+  mapping = {
+    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+    ["<C-e>"] = cmp.mapping.close(),
+    ["<Up>"] = cmp.mapping.select_prev_item(),
+    ["<Down>"] = cmp.mapping.select_next_item(),
+  },
+  sources = cmp.config.sources({
+    { name = "lazydev" },
+    { name = "nvim_lsp" },
+    { name = 'nvim_lsp_signature_help'},
+    { name = 'nvim_lua', keyword_length = 2},
+    { name = "path" },
+    { name = 'vsnip', keyword_length = 2 },
+    { name = 'calc'},
+  }, {
+    { name = "buffer" },
+  }),
+})
+
+
+
+-- cmp.setup.cmdline(':', {
+--  mapping = cmp.mapping.preset.cmdline({
+--     ["<Tab>"] = cmp.mapping.confirm({ select = true }),
+--     ["<C-e>"] = cmp.mapping.close(),
+--     ["<Up>"] = cmp.mapping.select_prev_item(),
+--     ["<Down>"] = cmp.mapping.select_next_item(),
+--  }),
+--   sources = cmp.config.sources({
+--     { name = 'path' }
+--   }, {
+--     {
+--       name = 'cmdline',
+--       option = {
+--         ignore_cmds = { 'Man', '!' }
+--       }
+--     }
+--   })
+-- })
+
+-- cmp.setup.cmdline('/', {
+--   mapping = cmp.mapping.preset.cmdline({
+--     ["<Tab>"] = cmp.mapping.confirm({ select = true }),
+--     ["<Up>"] = cmp.mapping.select_prev_item(),
+--     ["<Down>"] = cmp.mapping.select_next_item(),
+--  }),
+--   sources = {
+--     { name = 'buffer' }
+--   }
+-- })

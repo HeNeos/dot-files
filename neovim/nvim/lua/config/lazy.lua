@@ -37,7 +37,14 @@ require("neo-tree").setup({
   source_selector = {
     winbar = false,
     statusline = false
-  }
+  },
+  filesystem = {
+    filtered_items = {
+      -- visible = true,
+      hide_dotfiles = false,
+      hide_gitignored = true,
+    },
+  },
 })
 
 require('gitsigns').setup {

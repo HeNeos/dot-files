@@ -93,6 +93,7 @@ map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
 -- :BarbarDisable - very bad command, should never be used
 
 map('n', '<C-n>', '<Cmd>Neotree toggle reveal<CR>', opts)
+map('n', '<C-g>', '<Cmd>Neotree toggle float git_status<CR>', opts)
 map('n', '<C-m>', '<Cmd>AerialToggle<CR>', opts)
 
 vim.g.markdown_fenced_languages = {

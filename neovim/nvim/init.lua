@@ -12,14 +12,14 @@ vim.opt.splitbelow = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.linebreak = true
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
 vim.opt.list = true
 vim.opt.listchars = {space = "·", tab = "▷▷⋮"}
 vim.opt.laststatus = 3
 vim.opt.expandtab = true
 vim.opt.smartindent = true
-vim.opt.softtabstop = 4
+vim.opt.softtabstop = 2
 vim.opt.mouse = 'a'
 vim.opt.fillchars = { eob = " " }
 vim.opt.whichwrap:append "<>[]hl"
@@ -65,7 +65,7 @@ map('n', '<A-p>', '<Cmd>BufferPin<CR>', opts)
 --                 :BufferGotoUnpinned
 
 -- Close buffer
-map('n', '<A-w>', '<Cmd>BufferClose<CR>', opts)
+map('n', '<A-q>', '<Cmd>BufferClose<CR>', opts)
 
 -- Wipeout buffer
 --                 :BufferWipeout
@@ -120,14 +120,14 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
         end,
 })
 
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-  pattern = "*.py",
-  group = "AutoFormat",
-  callback = function()
-    require("lint").try_lint("mypy")
-    require("lint").try_lint("flake8")
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+--   pattern = "*.py",
+--   group = "AutoFormat",
+--   callback = function()
+--     require("lint").try_lint("mypy")
+--     require("lint").try_lint("flake8")
+--   end,
+-- })
 
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   pattern = "*.go",
@@ -160,9 +160,15 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*.py",
   callback = function ()
-    vim.cmd("silent write")
-    vim.cmd("silent !black %")
-    vim.cmd("edit")
+    vim.lsp.buf.code_action({
+      context = {
+        only = {
+          "source.fixAll.ruff"
+        },
+      },
+      apply = true,
+    })
+    vim.lsp.buf.format({async = false})
   end,
 })
 

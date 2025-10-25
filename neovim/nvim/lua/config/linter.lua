@@ -8,4 +8,4 @@ require('lint').linters_by_ft = {
 }
 
 mypy = require('lint').get_namespace("mypy")
-flake8 = require('lint').get_namespace("flake8")
+-- flake8 = require('lint').get_namespace("flake8")

@@ -98,6 +98,40 @@ require('gitsigns').setup {
   },
 }
 
+require('fzf-lua').setup({
+  'max-perf',
+  fzf_colors = true,
+  winopts = {
+    height = 0.90,
+    width = 0.85,
+    row = 0.35,
+    border = 'rounded',
+  },
+  files = {
+    cmd = "fd --type f --hidden --exclude .git",
+    async = true,
+  },
+  grep = {
+    cmd = "rg --vimgrep --no-heading --hidden --smart-case -g '!{.git,node_modules,.venv}'",
+    async = true,
+  },
+  lsp = {
+    async_or_timeout = 1000
+  },
+  colors = {
+    fg      = "#F8F8F2",
+    bg      = "#1B1D1E",
+    hl      = "#F92672",
+    info    = "#A6E22E",
+    border  = "#808080",
+    header  = "#7E8E91",
+    pointer = "#A6E22E",
+    marker  = "#F92672",
+    spinner = "#E6DB74",
+    prompt  = "#F92672",
+  },
+})
+
 require("catppuccin").setup({
     flavour = "auto", -- latte, frappe, macchiato, mocha
     background = { -- :h background
@@ -142,6 +176,7 @@ require("catppuccin").setup({
         barbar = true,
         dashboard = true,
         diffview = true,
+        fzf = true,
         neotree = true,
         indent_blankline = {
             enabled = true,
@@ -299,7 +334,7 @@ require("aerial").setup({
   keymaps = {
     ["?"] = "actions.show_help",
     ["g?"] = "actions.show_help",
-    ["<CR>"] = "actions.jump",
+    -- ["<CR>"] = "actions.jump",
     ["<2-LeftMouse>"] = "actions.jump",
     ["<C-v>"] = "actions.jump_vsplit",
     ["<C-s>"] = "actions.jump_split",
@@ -543,7 +578,7 @@ require("aerial").setup({
     preview = false,
     -- Keymaps in the nav window
     keymaps = {
-      ["<CR>"] = "actions.jump",
+      -- ["<CR>"] = "actions.jump",
       ["<2-LeftMouse>"] = "actions.jump",
       ["<C-v>"] = "actions.jump_vsplit",
       ["<C-s>"] = "actions.jump_split",
@@ -618,18 +653,40 @@ vim.keymap.set('n', '<Space>fg', builtin.live_grep, { desc = 'Telescope live gre
 vim.keymap.set('n', '<Space>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<Space>fh', builtin.help_tags, { desc = 'Telescope help tags' })
 
+local fzf = require("fzf-lua")
+
+-- vim.keymap.set('n', '<leader>ff', fzf.files, { desc = 'Find files (fzf-lua)' })
+-- vim.keymap.set('n', '<leader>fg', fzf.live_grep, { desc = 'Live grep (fzf-lua)' })
+-- vim.keymap.set('n', '<leader>fb', fzf.buffers, { desc = 'List buffers (fzf-lua)' })
+-- vim.keymap.set('n', '<leader>fh', fzf.help_tags, { desc = 'Help tags (fzf-lua)' })
+
 local wk = require("which-key")
+-- vim.api.nvim_create_autocmd({"LspAttach"}, {
+--   callback = function()
+--     wk.add({
+--       {"g", group="Goto"},
+--       {"gd", vim.lsp.buf.definition, desc="Go to definition"},
+--       {"gD", vim.lsp.buf.declaration, desc="Go to declaration"},
+--       {"gi", vim.lsp.buf.implementation, desc="Go to implementation"},
+--       -- {"gr", builtin.buf.references, desc="Open a telescope window with references"},
+--       {"gr", builtin.lsp_references, desc="Open a telescope window with references"},
+--     })
+--   end
+-- })
+
 vim.api.nvim_create_autocmd({"LspAttach"}, {
   callback = function()
     wk.add({
       {"g", group="Goto"},
-      {"gd", vim.lsp.buf.definition, desc="Go to definition"},
+      {"gd", fzf.lsp_definitions, desc="Go to definition"},
       {"gD", vim.lsp.buf.declaration, desc="Go to declaration"},
-      {"gi", vim.lsp.buf.implementation, desc="Go to implementation"},
-      {"gr", builtin.lsp_references, desc="Open a telescope window with references"},
+      {"gi", fzf.lsp_implementations, desc="Go to implementation"},
+      {"gr", fzf.lsp_references, desc="Go to references"},
+      {"gt", fzf.lsp_typedefs, desc="Go to type definition"},
     })
   end
 })
+
 
 local cmp = require("cmp")
 local defaults = require("cmp.config.default")
